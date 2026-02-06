@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production'
+const basePath = process.env.BASE_PATH || (isProd ? '/cursor-review' : '')
+
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
-  basePath: process.env.NODE_ENV === 'production' ? '/cursor-review' : '',
+  basePath: basePath,
   images: {
     unoptimized: true, // Required for static export
     remotePatterns: [

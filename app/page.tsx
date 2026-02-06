@@ -14,23 +14,39 @@ async function getData(): Promise<GitHubStats> {
 }
 
 export default async function Home() {
-  let data: GitHubStats;
+  let data: GitHubStats | null = null;
   let error: string | null = null;
 
   try {
     data = await getData();
   } catch (e: any) {
     error = e.message || 'Failed to load data';
-    // Return error UI
+    console.error('Failed to fetch GitHub data:', e);
+    // Don't throw - return error UI instead to allow build to succeed
+  }
+
+  // Show error UI if data fetch failed
+  if (error || !data) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
         <div className="max-w-7xl mx-auto">
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
             <h1 className="text-2xl font-bold text-red-900 dark:text-red-200 mb-2">Error Loading Dashboard</h1>
-            <p className="text-red-700 dark:text-red-300">{error}</p>
+            <p className="text-red-700 dark:text-red-300">{error || 'Failed to load repository data'}</p>
             <p className="text-sm text-red-600 dark:text-red-400 mt-4">
-              Make sure your TOKEN or GITHUB_TOKEN is set in .env.local file
+              For GitHub Actions: Make sure TOKEN secret is set in repository settings
             </p>
+            <p className="text-sm text-red-600 dark:text-red-400">
+              For local development: Make sure TOKEN or GITHUB_TOKEN is set in .env.local file
+            </p>
+            <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+              <p>Setup instructions:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Go to: <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">Settings → Secrets and variables → Actions</code></li>
+                <li>Add a secret named <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">TOKEN</code></li>
+                <li>Value: Your GitHub Personal Access Token</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
