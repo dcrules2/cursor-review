@@ -8,9 +8,29 @@ import RecentCommits from '@/components/dashboard/RecentCommits';
 import { format, parseISO } from 'date-fns';
 
 async function getData(): Promise<GitHubStats> {
-  // For static export, fetch directly from GitHub API at build time
+  // Try to load snapshot data first (saved during build)
+  // This runs at build time, so we can use Node.js fs
+  if (typeof window === 'undefined') {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const snapshotPath = path.join(process.cwd(), 'data', 'snapshot.json');
+      
+      if (fs.existsSync(snapshotPath)) {
+        const snapshotData = fs.readFileSync(snapshotPath, 'utf-8');
+        const snapshot = JSON.parse(snapshotData);
+        console.log(`Using snapshot data from ${snapshot.snapshotInfo?.generatedAt || 'unknown date'}`);
+        return snapshot;
+      }
+    } catch (error) {
+      console.warn('Could not load snapshot, falling back to API:', error);
+    }
+  }
+  
+  // Fallback: fetch directly from GitHub API at build time
+  // This should only happen if snapshot doesn't exist
   const { getRepositoryStats } = await import('@/lib/github');
-  return getRepositoryStats('OpenHands', 'OpenHands');
+  return getRepositoryStats('OpenHands', 'OpenHands', true);
 }
 
 export default async function Home() {

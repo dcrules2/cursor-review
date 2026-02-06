@@ -36,11 +36,9 @@ jobs:
             npm install
           fi
 
-      - name: Build with Next.js
+      - name: Fetch snapshot data
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          BASE_PATH: /cursor-review
-          NODE_ENV: production
         run: |
           if [ -z "$GITHUB_TOKEN" ]; then
             echo "::error::TOKEN secret is not set!"
@@ -48,6 +46,15 @@ jobs:
             echo "https://github.com/dcrules2/cursor-review/settings/secrets/actions"
             exit 1
           fi
+          echo "Fetching snapshot data (last 30 days)..."
+          npm run fetch-snapshot
+
+      - name: Build with Next.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          BASE_PATH: /cursor-review
+          NODE_ENV: production
+        run: |
           echo "Building Next.js application..."
           npm run build
         # Note: Create a repository secret named TOKEN in Settings > Secrets and variables > Actions

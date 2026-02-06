@@ -1,0 +1,3 @@
+# This directory contains snapshot data fetched from GitHub API
+# The snapshot.json file is generated during build and contains
+# repository data for the last 30 days

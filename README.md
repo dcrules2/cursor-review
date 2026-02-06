@@ -97,9 +97,21 @@ npm run build
 # You can push the out/ directory to the gh-pages branch
 ```
 
-### Static Export Note
+### Snapshot Data
 
-This project uses Next.js static export for GitHub Pages. Data is fetched directly from GitHub API at build time. API routes are not used in this configuration.
+This project uses a snapshot system to avoid repeated API calls:
+
+- **Snapshot Generation**: Before each build, a snapshot script fetches the last 30 days of commit data from GitHub API
+- **Snapshot Storage**: The snapshot is saved to `data/snapshot.json` in the repository
+- **Build Process**: During build, the app uses the snapshot data instead of making live API calls
+- **Date Range**: Snapshot includes commits from the last 30 days (from today going back 30 days)
+
+To update the snapshot manually:
+```bash
+npm run fetch-snapshot
+```
+
+The snapshot is automatically generated before each build via the `prebuild` script.
 
 ## Project Structure
 
