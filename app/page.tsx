@@ -8,16 +8,9 @@ import RecentCommits from '@/components/dashboard/RecentCommits';
 import { format, parseISO } from 'date-fns';
 
 async function getData(): Promise<GitHubStats> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/github?owner=OpenHands&repo=OpenHands`, {
-    cache: 'no-store', // Always fetch fresh data
-  });
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch repository data');
-  }
-
-  return res.json();
+  // For static export, fetch directly from GitHub API at build time
+  const { getRepositoryStats } = await import('@/lib/github');
+  return getRepositoryStats('OpenHands', 'OpenHands');
 }
 
 export default async function Home() {
@@ -36,7 +29,7 @@ export default async function Home() {
             <h1 className="text-2xl font-bold text-red-900 dark:text-red-200 mb-2">Error Loading Dashboard</h1>
             <p className="text-red-700 dark:text-red-300">{error}</p>
             <p className="text-sm text-red-600 dark:text-red-400 mt-4">
-              Make sure your GITHUB_TOKEN is set in .env.local file
+              Make sure your TOKEN or GITHUB_TOKEN is set in .env.local file
             </p>
           </div>
         </div>

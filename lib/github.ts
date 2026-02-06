@@ -3,10 +3,10 @@ import { GitHubRepository, GitHubContributor, GitHubCommit, GitHubLanguageStats,
 const GITHUB_API_BASE = 'https://api.github.com';
 
 async function fetchGitHubAPI(endpoint: string): Promise<any> {
-  const token = process.env.GITHUB_TOKEN;
+  const token = process.env.GITHUB_TOKEN || process.env.TOKEN;
   
   if (!token) {
-    throw new Error('GITHUB_TOKEN is not set in environment variables');
+    throw new Error('GITHUB_TOKEN or TOKEN is not set in environment variables');
   }
 
   const response = await fetch(`${GITHUB_API_BASE}${endpoint}`, {

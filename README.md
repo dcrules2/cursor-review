@@ -31,8 +31,9 @@ cp .env.example .env.local
 
 3. Add your GitHub Personal Access Token to `.env.local`:
 ```
-GITHUB_TOKEN=your_token_here
+TOKEN=your_token_here
 ```
+Note: You can also use `GITHUB_TOKEN` for local development, but GitHub Actions secrets must use `TOKEN` (cannot start with GITHUB).
 
 ### GitHub Token Permissions
 
@@ -59,15 +60,46 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```bash
 npm run build
-npm start
 ```
 
-## Deployment to Vercel
+The static files will be generated in the `out` directory.
 
-1. Push your code to GitHub
-2. Import your repository in Vercel
-3. Add the `GITHUB_TOKEN` environment variable in Vercel project settings
-4. Deploy!
+## Deployment to GitHub Pages
+
+This project is configured to deploy automatically to GitHub Pages using GitHub Actions.
+
+### Setup Instructions
+
+1. **Enable GitHub Pages in your repository:**
+   - Go to your repository settings: `https://github.com/dcrules2/cursor-review/settings/pages`
+   - Under "Source", select "GitHub Actions"
+
+2. **Add GitHub Token Secret (for GitHub Actions):**
+   - Go to: `https://github.com/dcrules2/cursor-review/settings/secrets/actions`
+   - Click "New repository secret"
+   - Name: `TOKEN` (Note: GitHub secrets cannot start with "GITHUB")
+   - Value: Your GitHub Personal Access Token (same one used locally)
+   - Click "Add secret"
+
+3. **Push to main branch:**
+   - The GitHub Action will automatically build and deploy your site
+   - Your dashboard will be available at: `https://dcrules2.github.io/cursor-review/`
+
+### Manual Deployment
+
+If you prefer to deploy manually:
+
+```bash
+# Build the static site
+npm run build
+
+# The out/ directory contains the static files
+# You can push the out/ directory to the gh-pages branch
+```
+
+### Local Development Note
+
+For local development, the API route at `/api/github` works normally. For GitHub Pages (static export), data is fetched directly from GitHub API at build time.
 
 ## Project Structure
 
