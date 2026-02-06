@@ -97,15 +97,14 @@ npm run build
 # You can push the out/ directory to the gh-pages branch
 ```
 
-### Local Development Note
+### Static Export Note
 
-For local development, the API route at `/api/github` works normally. For GitHub Pages (static export), data is fetched directly from GitHub API at build time.
+This project uses Next.js static export for GitHub Pages. Data is fetched directly from GitHub API at build time. API routes are not used in this configuration.
 
 ## Project Structure
 
 ```
 ├── app/
-│   ├── api/github/     # API route handlers
 │   ├── page.tsx        # Main dashboard page
 │   └── layout.tsx      # Root layout
 ├── components/
